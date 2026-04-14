@@ -10,8 +10,11 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import type { Message } from "@mariozechner/pi-ai";
-import { type ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import { type AgentToolResult, type ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import { Text } from "@mariozechner/pi-tui";
 import { Type } from "@sinclair/typebox";
+
+const MAX_TASK_ARG_LENGTH = 4000;
 
 const MINIMAL_SYSTEM_PROMPT = `You are a subagent running in an isolated pi process with access to file system and shell tools.
 
@@ -40,6 +43,7 @@ async function runSubagent(
 	task: string,
 	skills: string[],
 	signal?: AbortSignal,
+	onUpdate?: (result: AgentToolResult) => void,
 ): Promise<string> {
 	const args: string[] = ["--mode", "json", "-p", "--no-session"];
 
@@ -47,15 +51,23 @@ async function runSubagent(
 		args.push("--skill", skill);
 	}
 
-	let tmpFile: string | null = null;
+	let tmpDir: string | null = null;
 
 	try {
-		const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "pi-subagent-"));
-		tmpFile = path.join(tmpDir, "prompt.md");
-		await fs.promises.writeFile(tmpFile, MINIMAL_SYSTEM_PROMPT, { encoding: "utf-8", mode: 0o600 });
-		args.push("--append-system-prompt", tmpFile);
+		onUpdate?.({ content: [{ type: "text", text: "Subagent running..." }] });
 
-		args.push(`Task: ${task}`);
+		tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "pi-subagent-"));
+		const promptFile = path.join(tmpDir, "prompt.md");
+		await fs.promises.writeFile(promptFile, MINIMAL_SYSTEM_PROMPT, { encoding: "utf-8", mode: 0o600 });
+		args.push("--append-system-prompt", promptFile);
+
+		if (task.length > MAX_TASK_ARG_LENGTH) {
+			const taskFile = path.join(tmpDir, "task.md");
+			await fs.promises.writeFile(taskFile, task, { encoding: "utf-8", mode: 0o600 });
+			args.push(`Task: Please read ${taskFile} and follow the instructions there.`);
+		} else {
+			args.push(`Task: ${task}`);
+		}
 
 		const invocation = getPiInvocation(args);
 		const proc = spawn(invocation.command, invocation.args, {
@@ -68,6 +80,7 @@ async function runSubagent(
 		let stderr = "";
 		const messages: Message[] = [];
 
+		let turnCount = 0;
 		const processLine = (line: string) => {
 			if (!line.trim()) return;
 			let event: any;
@@ -77,7 +90,32 @@ async function runSubagent(
 				return;
 			}
 			if (event.type === "message_end" && event.message) {
-				messages.push(event.message as Message);
+				const msg = event.message as Message & { content: any[] };
+				messages.push(msg);
+				if (msg.role === "assistant" && onUpdate) {
+					turnCount++;
+					const toolCalls = (msg.content ?? []).filter((c: any) => c.type === "toolCall");
+					const textParts = (msg.content ?? [])
+						.filter((c: any) => c.type === "text")
+						.map((c: any) => c.text)
+						.join("");
+					let updateText = "";
+					if (toolCalls.length > 0) {
+						const counts = new Map<string, number>();
+						for (const c of toolCalls) counts.set(c.name, (counts.get(c.name) || 0) + 1);
+						const toolsStr = Array.from(counts.entries())
+							.map(([name, count]) => (count > 1 ? `${name} (x${count})` : name))
+							.join(", ");
+						updateText = `Turn ${turnCount}: ${toolsStr}`;
+					} else {
+						updateText = `Turn ${turnCount}: thinking...`;
+					}
+					if (textParts) {
+						const preview = textParts.length > 60 ? textParts.slice(0, 60) + "..." : textParts;
+						updateText += `\n${preview}`;
+					}
+					onUpdate({ content: [{ type: "text", text: updateText }] });
+				}
 			}
 		};
 
@@ -134,10 +172,9 @@ async function runSubagent(
 
 		return "";
 	} finally {
-		if (tmpFile) {
+		if (tmpDir) {
 			try {
-				await fs.promises.unlink(tmpFile);
-				await fs.promises.rmdir(path.dirname(tmpFile));
+				await fs.promises.rm(tmpDir, { recursive: true, force: true });
 			} catch {
 				/* ignore */
 			}
@@ -165,9 +202,9 @@ export default function (pi: ExtensionAPI) {
 		],
 		parameters: SubagentParams,
 
-		async execute(_toolCallId, params, signal, _onUpdate, ctx) {
+		async execute(_toolCallId, params, signal, onUpdate, ctx) {
 			try {
-				const output = await runSubagent(ctx.cwd, params.task, params.skills ?? [], signal);
+				const output = await runSubagent(ctx.cwd, params.task, params.skills ?? [], signal, onUpdate);
 				return {
 					content: [{ type: "text", text: output || "(no output)" }],
 				};
@@ -177,6 +214,27 @@ export default function (pi: ExtensionAPI) {
 					isError: true,
 				};
 			}
+		},
+
+		renderCall(args, theme) {
+			const taskPreview = args.task.length > 60 ? args.task.slice(0, 60) + "..." : args.task;
+			let text = theme.fg("toolTitle", theme.bold("subagent ")) + theme.fg("dim", taskPreview);
+			const skillsArr = args.skills ?? [];
+			if (skillsArr.length > 0) {
+				text += ` ${theme.fg("accent", `+${skillsArr.length} skills`)}`;
+			}
+			return new Text(text, 0, 0);
+		},
+
+		renderResult(result, options, theme) {
+			const output = result.content.find((c) => c.type === "text")?.text ?? "";
+			if (options.isPartial) {
+				return new Text(theme.fg("muted", output || "Subagent running..."), 0, 0);
+			}
+			const marker = theme.fg("success", "✓ ");
+			const separator = theme.fg("muted", "--- Result ---");
+			const text = `${marker}${separator}\n${output}`;
+			return new Text(text, 0, 0);
 		},
 	});
 }
