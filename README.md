@@ -6,6 +6,7 @@ A minimal pi extension that delegates tasks to isolated subagent processes.
 
 Most subagent extensions ship with heavy abstractions: agent definition files, configurable models, working-directory overrides, and a kitchen sink of rarely-used parameters. **This one doesn't.**
 
+- **Zero setup**: Install via pi and use it in the next session. No agent directories to manage, no agent definitions to write.
 - **Minimal interface**: Only `task` and optional `skills`. We removed `model`, `cwd`, `agent`, and other parameters that add more confusion than value.
 - **No agent definitions**: Unlike almost every other subagent tool, we don't use `~/.pi/agent/agents/*.md` or any custom agent discovery. If you need specialization, **reuse your existing pi skills** via the `skills` parameter.
 - **One focused system prompt**: Every subagent gets the same lean, task-oriented prompt designed for delegation and clear reporting.
@@ -22,25 +23,26 @@ Most subagent extensions ship with heavy abstractions: agent definition files, c
 ## Installation
 
 ```bash
-# From npm
-npm install -g @jerryan/pi-subagent-lite
-
-# Then symlink into pi's extensions directory
-mkdir -p ~/.pi/agent/extensions/pi-subagent-lite
-ln -sf "$(npm root -g)/@jerryan/pi-subagent-lite/index.ts" ~/.pi/agent/extensions/pi-subagent-lite/index.ts
+pi install npm:@jerryan/pi-subagent-lite
 ```
 
-Or clone and link manually:
+The extension will be available the next time you start a pi session.
+
+To try it without installing permanently:
 
 ```bash
-git clone https://github.com/JerryAZR/pi-subagent-lite.git
-mkdir -p ~/.pi/agent/extensions/pi-subagent-lite
-ln -sf "$(pwd)/pi-subagent-lite/index.ts" ~/.pi/agent/extensions/pi-subagent-lite/index.ts
+pi -e npm:@jerryan/pi-subagent-lite
+```
+
+For local development, run inside the repo:
+
+```bash
+pi -e .
 ```
 
 ## Usage
 
-Once installed and reloaded, the `subagent` tool is available:
+Once installed, the `subagent` tool is available:
 
 ```
 Run a subagent to find all test files in the project
