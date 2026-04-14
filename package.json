@@ -22,12 +22,12 @@
   "author": "jerryan",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jerryan/pi-subagent-lite.git"
+    "url": "git+https://github.com/JerryAZR/pi-subagent-lite.git"
   },
   "bugs": {
-    "url": "https://github.com/jerryan/pi-subagent-lite/issues"
+    "url": "https://github.com/JerryAZR/pi-subagent-lite/issues"
   },
-  "homepage": "https://github.com/jerryan/pi-subagent-lite#readme",
+  "homepage": "https://github.com/JerryAZR/pi-subagent-lite#readme",
   "engines": {
     "node": ">=18"
   },

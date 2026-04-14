@@ -24,7 +24,7 @@ ln -sf "$(npm root -g)/@jerryan/pi-subagent-lite/index.ts" ~/.pi/agent/extension
 Or clone and link manually:
 
 ```bash
-git clone https://github.com/jerryan/pi-subagent-lite.git
+git clone https://github.com/JerryAZR/pi-subagent-lite.git
 mkdir -p ~/.pi/agent/extensions/pi-subagent-lite
 ln -sf "$(pwd)/pi-subagent-lite/index.ts" ~/.pi/agent/extensions/pi-subagent-lite/index.ts
 ```
