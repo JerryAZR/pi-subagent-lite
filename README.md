@@ -8,10 +8,8 @@ Most subagent extensions ship with heavy abstractions: agent definition files, c
 
 - **Minimal interface**: Only `task` and optional `skills`. We removed `model`, `cwd`, `agent`, and other parameters that add more confusion than value.
 - **No agent definitions**: Unlike almost every other subagent tool, we don't use `~/.pi/agent/agents/*.md` or any custom agent discovery. If you need specialization, **reuse your existing pi skills** via the `skills` parameter.
-- **Zero setup**: Install, symlink, reload. No agent directories to manage, no YAML frontmatter to write, no config files to tune.
 - **One focused system prompt**: Every subagent gets the same lean, task-oriented prompt designed for delegation and clear reporting.
 - **Transparent long-task handling**: Tasks longer than 4000 chars are automatically spilled to a temp file so they never hit CLI length limits.
-- **Clean live UI**: See real-time turn progress while the subagent works, and a clear `✓ --- Result ---` separator when it's done.
 
 ## Features
 
