@@ -1,0 +1,10 @@
+{
+  "name": "pi-co-agent",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "@sinclair/typebox": "^0.34.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  }
+}
