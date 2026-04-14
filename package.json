@@ -1,5 +1,5 @@
 {
-  "name": "@jerryan/pi-subagent",
+  "name": "@jerryan/pi-subagent-lite",
   "version": "0.1.0",
   "description": "Minimal pi extension that delegates tasks to isolated subagent processes with optional skill loading",
   "main": "index.ts",
@@ -22,12 +22,12 @@
   "author": "jerryan",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jerryan/pi-subagent.git"
+    "url": "git+https://github.com/jerryan/pi-subagent-lite.git"
   },
   "bugs": {
-    "url": "https://github.com/jerryan/pi-subagent/issues"
+    "url": "https://github.com/jerryan/pi-subagent-lite/issues"
   },
-  "homepage": "https://github.com/jerryan/pi-subagent#readme",
+  "homepage": "https://github.com/jerryan/pi-subagent-lite#readme",
   "engines": {
     "node": ">=18"
   },

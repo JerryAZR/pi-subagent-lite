@@ -1,4 +1,4 @@
-# @jerryan/pi-subagent
+# @jerryan/pi-subagent-lite
 
 A minimal pi extension that delegates tasks to isolated subagent processes.
 
@@ -14,19 +14,19 @@ A minimal pi extension that delegates tasks to isolated subagent processes.
 
 ```bash
 # From npm
-npm install -g @jerryan/pi-subagent
+npm install -g @jerryan/pi-subagent-lite
 
 # Then symlink into pi's extensions directory
-mkdir -p ~/.pi/agent/extensions/pi-subagent
-ln -sf "$(npm root -g)/@jerryan/pi-subagent/index.ts" ~/.pi/agent/extensions/pi-subagent/index.ts
+mkdir -p ~/.pi/agent/extensions/pi-subagent-lite
+ln -sf "$(npm root -g)/@jerryan/pi-subagent-lite/index.ts" ~/.pi/agent/extensions/pi-subagent-lite/index.ts
 ```
 
 Or clone and link manually:
 
 ```bash
-git clone https://github.com/jerryan/pi-subagent.git
-mkdir -p ~/.pi/agent/extensions/pi-subagent
-ln -sf "$(pwd)/pi-subagent/index.ts" ~/.pi/agent/extensions/pi-subagent/index.ts
+git clone https://github.com/jerryan/pi-subagent-lite.git
+mkdir -p ~/.pi/agent/extensions/pi-subagent-lite
+ln -sf "$(pwd)/pi-subagent-lite/index.ts" ~/.pi/agent/extensions/pi-subagent-lite/index.ts
 ```
 
 ## Usage
