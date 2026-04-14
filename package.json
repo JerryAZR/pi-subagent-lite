@@ -1,7 +1,41 @@
 {
-  "name": "pi-co-agent",
-  "version": "1.0.0",
-  "private": true,
+  "name": "@jerryan/pi-subagent",
+  "version": "0.1.0",
+  "description": "Minimal pi extension that delegates tasks to isolated subagent processes with optional skill loading",
+  "main": "index.ts",
+  "types": "index.ts",
+  "files": [
+    "index.ts",
+    "types",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "pi",
+    "pi-extension",
+    "subagent",
+    "agent",
+    "cli",
+    "coding-agent"
+  ],
+  "license": "MIT",
+  "author": "jerryan",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jerryan/pi-subagent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jerryan/pi-subagent/issues"
+  },
+  "homepage": "https://github.com/jerryan/pi-subagent#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-ai": "*",
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-tui": "*"
+  },
   "devDependencies": {
     "@sinclair/typebox": "^0.34.0",
     "@types/node": "^20.0.0",
