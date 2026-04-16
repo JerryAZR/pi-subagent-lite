@@ -1,6 +1,6 @@
 {
   "name": "@jerryan/pi-subagent-lite",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Minimal pi extension that delegates tasks to isolated subagent processes with optional skill loading",
   "main": "index.ts",
   "types": "index.ts",
@@ -41,5 +41,8 @@
     "@sinclair/typebox": "^0.34.0",
     "@types/node": "^20.0.0",
     "typescript": "^5.4.0"
+  },
+  "pi": {
+    "extensions": ["./index.ts"]
   }
 }
