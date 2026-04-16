@@ -19,6 +19,7 @@ Most subagent extensions ship with heavy abstractions: agent definition files, c
 - **Optional skills**: Preload capabilities via `--skill` flags
 - **Auto-spill**: Long tasks (>4000 chars) are automatically written to a temp file to avoid CLI limits
 - **Clean result rendering**: Final output is clearly marked with a `✓ --- Result ---` separator
+- **No recursive nesting**: When running inside a subagent process, the tool automatically unregisters itself so subagents cannot spawn further subagents
 
 ## Installation
 

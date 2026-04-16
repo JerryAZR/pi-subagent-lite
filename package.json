@@ -1,6 +1,6 @@
 {
   "name": "@jerryan/pi-subagent-lite",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Minimal pi extension that delegates tasks to isolated subagent processes with optional skill loading",
   "main": "index.ts",
   "types": "index.ts",
@@ -13,6 +13,7 @@
   "keywords": [
     "pi",
     "pi-extension",
+    "pi-package",
     "subagent",
     "agent",
     "cli",

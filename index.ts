@@ -192,6 +192,10 @@ const SubagentParams = Type.Object({
 });
 
 export default function (pi: ExtensionAPI) {
+	if (process.env.PI_CODING_AGENT === "true") {
+		return;
+	}
+
 	pi.registerTool({
 		name: "subagent",
 		label: "Subagent",
