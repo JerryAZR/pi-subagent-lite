@@ -74,6 +74,7 @@ async function runSubagent(
 			cwd,
 			shell: false,
 			stdio: ["ignore", "pipe", "pipe"],
+			env: { ...process.env, PI_SUBAGENT_LITE_DISABLE: "true" },
 		});
 
 		let buffer = "";
@@ -192,7 +193,7 @@ const SubagentParams = Type.Object({
 });
 
 export default function (pi: ExtensionAPI) {
-	if (process.env.PI_CODING_AGENT === "true") {
+	if (process.env.PI_SUBAGENT_LITE_DISABLE === "true") {
 		return;
 	}
 
